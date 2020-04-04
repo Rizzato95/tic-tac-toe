@@ -40,6 +40,8 @@ export default class Square extends Vue {
 
       if (this.checkWin())
         this.$store.dispatch('setWin');
+      else if (this.game.numberOfMoves === 9)
+        this.$store.dispatch('setDraw');
       else
         this.$store.dispatch('changeTurn');
     }

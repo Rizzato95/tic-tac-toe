@@ -24,7 +24,6 @@ export default new Vuex.Store({
     },
     START_GAME(state) {
       state.game = new Game();
-      // state.game.state = 'Started';
       state.game.currentTurn = state.settings.players[0];
       state.message = 'It\'s ' + state.game.currentTurn.name + ' turn';
     },
@@ -41,10 +40,13 @@ export default new Vuex.Store({
     },
     SET_WIN(state) {
       state.game.isGoldenWin = state.game.numberOfMoves === 5;
-      // state.game.state = 'Completed';
       state.game.winner = state.game.currentTurn;
       state.message = state.game.currentTurn.name + ' win with ' + state.game.numberOfMoves.toString() + ' moves!';
 
+      state.history.push(state.game);
+    },
+    SET_DRAW(state) {
+      state.message = 'It\'s a draw';
       state.history.push(state.game);
     }
   },
@@ -72,6 +74,9 @@ export default new Vuex.Store({
     },
     setWin({ commit }) {
       commit('SET_WIN');
+    },
+    setDraw({ commit }) {
+      commit('SET_DRAW');
     }
   },
   modules: {
