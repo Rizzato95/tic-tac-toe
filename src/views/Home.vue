@@ -6,13 +6,11 @@
         <span>{{message}}</span>
       </v-col>
     </v-row>
-    <v-row justify="center" align="center" v-if="game.winner">
+    <v-row justify="center" align="center" v-if="game.winner || game.numberOfMoves === 9">
       <v-col md="12 text-center">
         <v-btn x-large @click="createNewGame">New game</v-btn>
       </v-col>
     </v-row>
-
-    <GameSettings v-model="settingsAreVisible" />
   </v-container>
 </template>
 
@@ -21,28 +19,20 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 import GameField from '@/components/GameField.vue'
-import GameSettings from '@/components/Settings.vue'
 
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 @Component({
   components: {
-    GameField,
-    GameSettings
+    GameField
   },
   computed: {
     ...mapState(['game', 'settings', 'message'])
   }
 })
 export default class Home extends Vue {
-  private settingsAreVisible = false;
-
   private created() {
     this.$store.dispatch('initializeGame');
-  }
-
-  private mounted() {
-    this.settingsAreVisible = true;
   }
 
   private createNewGame() {
@@ -50,20 +40,3 @@ export default class Home extends Vue {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.home {
-  .title {
-    font-size: 36px;
-  }
-}
-
-.fade-enter-active {
-  transition: all 1s ease;
-}
-
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  transform: translateX(-20px);
-  opacity: 0;
-}
-</style>
