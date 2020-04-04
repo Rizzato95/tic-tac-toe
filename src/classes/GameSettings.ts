@@ -12,7 +12,7 @@ export default class GameSettings {
   public players: Player[];
 
   constructor() {
-    this.mode = 'SinglePlayer';
+    this.mode = 'MultiPlayer';
     this.difficulty = 'Medium';
     this.players = [];
   }
