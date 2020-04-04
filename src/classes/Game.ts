@@ -14,14 +14,11 @@ export default class Game {
   public winner: Player | null;
   /** The list of moves  */
   public board: string[];
-  /** The state of the game */
-  // public state!: 'NotStarted' | 'Started' | 'Completed';
 
   constructor() {
     this.numberOfMoves = 0;
     this.isGoldenWin = false;
     this.winner = null;
-    // this.state = 'NotStarted';
     this.board = ['', '', '', '', '', '', '', '', ''];
   }
 }
