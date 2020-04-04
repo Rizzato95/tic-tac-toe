@@ -10,17 +10,24 @@
             <v-row align="center">
               <v-col sm="4">Game mode</v-col>
               <v-col sm="8">
-                <v-radio-group v-model="mode" row>
-                  <v-radio label="1 vs computer" value="SinglePlayer"></v-radio>
+                <v-radio-group v-model="gameSettings.mode" row>
                   <v-radio label="1 vs 1" value="MultiPlayer"></v-radio>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <div v-on="on">
+                        <v-radio label="1 vs computer" value="SinglePlayer" disabled></v-radio>
+                      </div>
+                    </template>
+                    <span>Coming soon...</span>
+                  </v-tooltip>
                 </v-radio-group>
               </v-col>
             </v-row>
             <v-scale-transition :hide-on-leave="true">
-              <v-row align="center" v-if="mode === 'SinglePlayer'">
+              <v-row align="center" v-if="gameSettings.mode === 'SinglePlayer'">
                 <v-col sm="4">Game difficulty</v-col>
                 <v-col sm="8">
-                  <v-radio-group v-model="difficulty" row>
+                  <v-radio-group v-model="gameSettings.difficulty" row>
                     <v-radio label="Easy" value="Easy"></v-radio>
                     <v-radio label="Medium" value="Medium"></v-radio>
                     <v-radio label="Hard" value="Hard"></v-radio>
@@ -29,7 +36,7 @@
               </v-row>
             </v-scale-transition>
             <v-row>
-              <v-col :sm="mode === 'MultiPlayer' ? 6  :12">
+              <v-col :sm="gameSettings.mode === 'MultiPlayer' ? 6  :12">
                 <v-text-field
                   v-model="player1"
                   :error-messages="player1Error"
@@ -40,7 +47,7 @@
                 ></v-text-field>
               </v-col>
               <v-scale-transition :hide-on-leave="true">
-                <v-col sm="6" v-if="mode === 'MultiPlayer'">
+                <v-col sm="6" v-if="gameSettings.mode === 'MultiPlayer'">
                   <v-text-field
                     v-model="player2"
                     :error-messages="player2Error"
@@ -64,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 import { mapState } from 'vuex'
 
@@ -75,7 +82,6 @@ import Player from '../classes/Player'
 
 Component.registerHooks(['validations'])
 
-
 @Component({
   computed: {
     ...mapState(['game', 'settings'])
@@ -84,9 +90,6 @@ Component.registerHooks(['validations'])
 })
 export default class Settings extends Vue {
   @Prop({ default: false }) value!: any;
-
-  private mode: 'SinglePlayer' | 'MultiPlayer' = 'SinglePlayer';
-  private difficulty: 'Easy' | 'Medium' | 'Hard' = 'Medium';
 
   private player1 = '';
   private player2 = '';
@@ -98,11 +101,12 @@ export default class Settings extends Vue {
       player1: { required },
       player2: {
         required: requiredIf(() => {
-          return this.mode === 'MultiPlayer'
+          return this.gameSettings.mode === 'MultiPlayer'
         })
       }
     }
   }
+
   private get player1Error() {
     const errors: any = [];
     if (!this.$v.player1.$dirty) return errors
@@ -112,7 +116,7 @@ export default class Settings extends Vue {
 
   private get player2Error() {
     const errors: any = []
-    if (!this.$v.player2.$dirty || this.mode === 'SinglePlayer') return errors
+    if (!this.$v.player2.$dirty || this.gameSettings.mode === 'SinglePlayer') return errors
     !this.$v.player2.required && errors.push('Name is required.')
     return errors
   }
@@ -124,10 +128,7 @@ export default class Settings extends Vue {
     this.$v.$touch();
 
     if (!this.$v.$invalid) {
-      this.gameSettings = new GameSettings();
-      this.gameSettings.mode = this.mode;
-      this.gameSettings.difficulty = this.difficulty;
-
+      this.gameSettings.players = [];
       this.gameSettings.players.push(new Player('X', this.player1));
       this.gameSettings.players.push(new Player('O', this.gameSettings.mode === 'SinglePlayer' ? 'Computer' : this.player2));
 
