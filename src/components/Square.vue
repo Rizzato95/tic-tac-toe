@@ -1,5 +1,11 @@
 <template>
-  <v-card class="col-4" outlined @click="move" @mouseover="onMouseOver($event, value)">
+  <v-card
+    class="col-4"
+    outlined
+    @click="move"
+    @mouseover="onMouseOver($event, value)"
+    :class="{'square-disable': game.winner}"
+  >
     <span class="symbol ml-5">{{value ? value : ''}}</span>
   </v-card>
 </template>
@@ -25,7 +31,7 @@ export default class Square extends Vue {
   private game!: Game;
 
   private onMouseOver(element: any, value: any) {
-    if (value === '') {
+    if (value === '' && !this.game.winner) {
       element.toElement.classList.add('square-enable');
       element.toElement.classList.remove('square-disable');
     } else {
@@ -35,7 +41,7 @@ export default class Square extends Vue {
   }
 
   private async move() {
-    if (this.value === '') {
+    if (this.value === '' && !this.game.winner) {
       await this.$store.dispatch('setMove', this.index);
 
       if (this.checkWin())
