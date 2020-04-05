@@ -8,14 +8,14 @@
         <v-card-text>
           <v-container>
             <v-row align="center">
-              <v-col sm="4">Game mode</v-col>
-              <v-col sm="8">
+              <v-col sm="6">Game mode</v-col>
+              <v-col sm="6">
                 <v-radio-group v-model="gameSettings.mode" row>
                   <v-radio label="1 vs 1" value="MultiPlayer"></v-radio>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
                       <div v-on="on">
-                        <v-radio label="1 vs computer" value="SinglePlayer" disabled></v-radio>
+                        <v-radio label="1 vs pc" value="SinglePlayer" disabled></v-radio>
                       </div>
                     </template>
                     <span>Coming soon...</span>
@@ -36,7 +36,7 @@
               </v-row>
             </v-scale-transition>
             <v-row>
-              <v-col :sm="gameSettings.mode === 'MultiPlayer' ? 6  :12">
+              <v-col cols="12" :sm="gameSettings.mode === 'MultiPlayer' ? 6  :12">
                 <v-text-field
                   v-model="player1"
                   :error-messages="player1Error"
@@ -47,7 +47,7 @@
                 ></v-text-field>
               </v-col>
               <v-scale-transition :hide-on-leave="true">
-                <v-col sm="6" v-if="gameSettings.mode === 'MultiPlayer'">
+                <v-col cols="12" sm="6" v-if="gameSettings.mode === 'MultiPlayer'">
                   <v-text-field
                     v-model="player2"
                     :error-messages="player2Error"
