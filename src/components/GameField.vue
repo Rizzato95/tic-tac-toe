@@ -1,7 +1,7 @@
 <template>
   <v-scale-transition appear>
     <v-row justify="center">
-      <v-col cols="2">
+      <v-col cols="10" sm="5" md="4" lg="3" xl="2">
         <v-row align="center" style="height: 300px;">
           <Square
             v-for="(boardField, index) in game.board"
